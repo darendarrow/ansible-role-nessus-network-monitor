@@ -1,0 +1,20 @@
+dependencies: []
+galaxy_info:
+  role_name: ansible-role-nessus-agent
+  description: Installs Tenable Nessus Network Monitor and links to Tenable.io, Tenable.sc.
+  author: Daren Darrow
+  company: Joyent (http://www.joyent.com)
+  license: Mozilla Public License Version 2.0
+
+  min_ansible_version: 2.5
+  platforms:
+    - name: EL
+      versions:
+        - 7
+
+  galaxy_tags:
+    - security
+    - nessus
+    - tenable
+    - pvs
+    - nnm

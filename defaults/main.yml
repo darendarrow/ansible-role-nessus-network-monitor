@@ -1,0 +1,20 @@
+---
+nnm_download_page: http://us-east.manta.joyent.com/daren.darrow@joyent.com/public/tenable/
+nnm_linux_tmp: /tmp
+nnm_version: 5.9.0
+nnm_host: cloud.tenable.com
+nnm_port: 443
+nnm_activation: Cloud
+  # Specify 'SecurityCenter' if your NNM is licensed and you want to have it managed by SecurityCenter.
+  # Specify 'Cloud' if your NNM is licensed and you want to have it managed by Tenable.io.
+  # Specify 'IndustrialSecurity' if you want to have it managed by Industrial Security.
+
+nnm_key: ""
+#nnm_admin_password: '' #leave commented for a random password to be generated. "Password must contain at least one uppercase character, one lowercase character, one digit and one of the special characters !@#$%^&*()"
+nnm_monitored_cidr: "0.0.0.0/0"
+
+
+nnm_min_password_length: 5
+
+# A value of 1 enables setting, 0 disables it
+nnm_enforce_complex_passwords: 1
