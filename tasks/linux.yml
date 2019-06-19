@@ -1,5 +1,5 @@
 ---
-- name: Check for existing Nessus Network Monitor installation.
+- name: Check for existing Nessus Network Monitor installation
   stat:
     path: /opt/nnm/bin/nnm
   register: nnm_installed
@@ -17,14 +17,14 @@
 ## begin common NNM configuration ##
 # https://docs.tenable.com/nnm/5_9/Content/CommonComandLineOperations.htm
 
-  - name: Name the Nessus Network Monitor from server hostname.
+  - name: Name the Nessus Network Monitor from server hostname
     command: /opt/nnm/bin/nnm --config "NNM Name" "{{ ansible_nodename }}"
     become: yes
     ignore_errors: yes
 
     # The linking key must be added prior to activating NNM else it will require a reinstall
-  - name: Add the linking key to NNMs.
-    command: /opt/nnm/bin/nnm --config "Cloud Key" "{{ nnm_key }}"
+  - name: Add the linking key to NNMs
+    command: /opt/nnm/bin/nnm --config "Cloud Key" "{{ nnm_key | mandatory }}"
     become: yes
     ignore_errors: yes
     register: nnm_linked
@@ -36,12 +36,12 @@
     register: nnm_activated
 
 # We will generate a complex password; however, it doesn't always agree with the apps policy
-  - name: Enforce Complex Password
-    shell: /opt/nnm/bin/nnm --config "Enforce Complex Passwords" {{ nnm_enforce_complex_passwords }}
+  - name: Enforce complex password
+    command: /opt/nnm/bin/nnm --config "Enforce Complex Passwords" {{ nnm_enforce_complex_passwords }}
     become: yes
 
   - name: Set minimum password length
-    shell: /opt/nnm/bin/nnm --config "Minimum Password Length" {{ nnm_min_password_length }}
+    command: /opt/nnm/bin/nnm --config "Minimum Password Length" {{ nnm_min_password_length }}
     become: yes
 
 # Without setting a password, anyone visiting the WebUI will be able to set one given the published default credentials
@@ -50,22 +50,34 @@
     when: nnm_admin_password is undefined
     register: nnm_admin_password
 
-  - name: Set admin password.
+  - name: Set admin password
     command: /opt/nnm/bin/nnm --users --chpasswd "admin" "{{ nnm_admin_password.stdout }}"
     become: yes
 
-#  - name: Monitor all network interfaces
-#    command: /opt/nnm/bin/nnm --config "Monitored Network Interfaces" {{ ansible_interfaces }}
-#    become: yes
+  - name: Create interface list
+    command: ls -m /sys/class/net
+    register: nnm_monitored_interfaces
 
-  - name: Monitor all network interfaces
+  - name: Monitor defined network interfaces
+    command: /opt/nnm/bin/nnm --config "Monitored Network Interfaces" "{{ nnm_monitored_interfaces.stdout }}"
+    become: yes
+
+  - name: Monitor defined network blocks
     command: /opt/nnm/bin/nnm --config "Monitored Network IP Addresses and Ranges" "{{ nnm_monitored_cidr }}"
     become: yes
 
-# A value of 1 enables PII Obfuscation.
-  - name: Monitor all network interfaces
-    command: /opt/nnm/bin/nnm --config "Enable PII Obfuscation" 0
+  - name: Send real-time events to syslog server
+    command: /opt/nnm/bin/nnm --config "Realtime Syslog Server List" "{{ nnm_realtime_events_syslog }}"
     become: yes
+
+  - name: Send vulnerability data to syslog server
+    command: /opt/nnm/bin/nnm --config "Vulnerability Syslog Server List" "{{ nnm_vulnerability_data_syslog }}"
+    become: yes
+
+# A value of 1 enables PII Obfuscation.
+#  - name: Enable PII Obfuscation
+#    command: /opt/nnm/bin/nnm --config "Enable PII Obfuscation" {{ nnm_pii_obfuscation }}
+#    become: yes
 
 #####
   - name: Ensure nnm is enabled and started.

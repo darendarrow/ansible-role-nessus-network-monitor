@@ -4,17 +4,29 @@ nnm_linux_tmp: /tmp
 nnm_version: 5.9.0
 nnm_host: cloud.tenable.com
 nnm_port: 443
-nnm_activation: Cloud
+
   # Specify 'SecurityCenter' if your NNM is licensed and you want to have it managed by SecurityCenter.
   # Specify 'Cloud' if your NNM is licensed and you want to have it managed by Tenable.io.
   # Specify 'IndustrialSecurity' if you want to have it managed by Industrial Security.
+nnm_activation: Cloud
+
 
 nnm_key: ""
-#nnm_admin_password: '' #leave commented for a random password to be generated. "Password must contain at least one uppercase character, one lowercase character, one digit and one of the special characters !@#$%^&*()"
-nnm_monitored_cidr: "0.0.0.0/0"
+# nnm_admin_password: '' #leave commented for a random password to be generated. "Password must contain at least one uppercase character, one lowercase character, one digit and one of the special characters !@#$%^&*()"
+
+  #  Note: Tenable Network Security does not recommend entering large ranges such as 0.0.0.0/0.
+  #  Because this indicates to NNM that any and all network addresses belong in the network, performance may be
+  #  severely impacted. Please only include addresses in your network, as each address undergoes in-depth processing.
+
+nnm_monitored_cidr: "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 72.2.118.0/24, 10.112.0.0/24"
 
 
 nnm_min_password_length: 5
 
-# A value of 1 enables setting, 0 disables it
+  # A value of 1 enables setting, 0 disables it
 nnm_enforce_complex_passwords: 1
+
+
+nnm_realtime_events_syslog: ""
+nnm_vulnerability_data_syslog: ""
+nnm_enable_connection_analysis_module: ""
