@@ -54,13 +54,13 @@
     command: /opt/nnm/bin/nnm --users --chpasswd "admin" "{{ nnm_admin_password.stdout }}"
     become: yes
 
-  - name: Monitor all network interfaces
-    command: /opt/nnm/bin/nnm --config "Monitored Network Interfaces" {{ ansible_interfaces }}
-    become: yes
-
 #  - name: Monitor all network interfaces
-#    command: /opt/nnm/bin/nnm --config "Monitored Network IP Addresses and Ranges" "{{ nnm_monitored_cidr }}"
+#    command: /opt/nnm/bin/nnm --config "Monitored Network Interfaces" {{ ansible_interfaces }}
 #    become: yes
+
+  - name: Monitor all network interfaces
+    command: /opt/nnm/bin/nnm --config "Monitored Network IP Addresses and Ranges" "{{ nnm_monitored_cidr }}"
+    become: yes
 
 # A value of 1 enables PII Obfuscation.
   - name: Monitor all network interfaces
